@@ -6,7 +6,7 @@ export default function StartScreen({ onStart }) {
       <nav className="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-md border-b border-[var(--color-outline-variant)]/30">
         <div className="flex justify-between items-center h-16 px-6 md:px-8 max-w-7xl mx-auto w-full">
           <div className="text-xl font-black tracking-tighter text-slate-900 font-display uppercase">
-            Horizon Scientific
+            Foam Flow Local Equilibrium
           </div>
           <div className="hidden md:flex items-center space-x-10">
             <a className="text-cyan-600 font-bold border-b-2 border-cyan-500 pb-1 font-display text-sm uppercase tracking-wider" href="#hero">Simulation</a>
@@ -176,17 +176,17 @@ export default function StartScreen({ onStart }) {
       <footer className="bg-slate-100 w-full py-12 border-t border-[var(--color-outline-variant)]/30">
         <div className="flex flex-col md:flex-row justify-between items-center px-6 md:px-12 max-w-7xl mx-auto gap-8">
           <div className="flex flex-col items-center md:items-start">
-            <span className="font-display font-black text-slate-900 text-xl tracking-tight mb-2 uppercase">Horizon Scientific</span>
-            <p className="font-sans text-xs tracking-tight text-slate-500 uppercase">Precision Lab Engine</p>
+            <span className="font-display font-black text-slate-900 text-xl tracking-tight mb-2 uppercase">Foam Flow Local Equilibrium</span>
+            <p className="font-sans text-xs tracking-tight text-slate-500 uppercase">Pontificia Universidad Javeriana</p>
           </div>
           <div className="flex flex-wrap justify-center gap-8">
             <a className="text-slate-500 hover:text-slate-800 font-sans text-xs tracking-tight transition-opacity uppercase" href="#framework">Documentation</a>
             <a className="text-slate-500 hover:text-slate-800 font-sans text-xs tracking-tight transition-opacity uppercase" href="#">Privacy Policy</a>
             <a className="text-slate-500 hover:text-slate-800 font-sans text-xs tracking-tight transition-opacity uppercase" href="#">Contact Support</a>
-            <a className="text-slate-500 hover:text-slate-800 font-sans text-xs tracking-tight transition-opacity uppercase" href="#">GitHub</a>
+            <a className="text-slate-500 hover:text-slate-800 font-sans text-xs tracking-tight transition-opacity uppercase" href="https://github.com/marco2712/Foam-flow-simulation2d" target="_blank" rel="noreferrer">GitHub</a>
           </div>
           <p className="text-slate-500 font-sans text-xs tracking-tight text-center md:text-right">
-            Copyright 2026 Horizon Scientific Precision Lab.
+            Copyright 2026 Andres Julian Castrillon & Marco Antonio Riascos
           </p>
         </div>
       </footer>
