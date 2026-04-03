@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardLayout from './layout/DashboardLayout';
-import { useSimStore } from './store/simStore';
+import StartScreen from './components/landing/StartScreen';
 
 function App() {
+  const [showDashboard, setShowDashboard] = useState(false);
+
   return (
     <div className="min-h-screen text-slate-100 dark" style={{ backgroundColor: 'var(--color-base-bg)'}}>
-      <DashboardLayout />
+      {showDashboard ? (
+        <DashboardLayout />
+      ) : (
+        <StartScreen onStart={() => setShowDashboard(true)} />
+      )}
     </div>
   );
 }

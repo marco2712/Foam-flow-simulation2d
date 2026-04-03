@@ -31,7 +31,7 @@ export default function DashboardLayout() {
     <div className="flex flex-col h-screen overflow-hidden text-[var(--color-on-surface)]">
       {/* Header bar */}
       <div className="flex-none h-16 glass-panel flex items-center justify-between px-6 z-10 m-2 mb-0">
-        <h1 className="text-xl font-bold tracking-tight text-[var(--color-primary)]">FOAM FLOW KINETIC</h1>
+        <h1 className="text-xl font-bold tracking-tight text-[var(--color-primary)]">FOAM FLOW LOCAL EQUILIBRIUM</h1>
         
         {/* Simulation Time Highlight */}
         <div className="flex bg-[var(--color-surface-container-highest)] px-4 py-2 rounded-lg text-sm items-center gap-6 font-semibold shadow-inner border border-[var(--color-outline-variant)]">
