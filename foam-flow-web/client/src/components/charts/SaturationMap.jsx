@@ -1,5 +1,6 @@
 import React from 'react';
 import CanvasMap2D from './CanvasMap2D';
+import Map2DWithAxes from './Map2DWithAxes';
 import { useSimStore } from '../../store/simStore';
 import * as d3 from 'd3';
 
@@ -31,13 +32,23 @@ export default function SaturationMap() {
   const colormap = (t) => d3.interpolateRdYlBu(1 - t);
 
   return (
-    <CanvasMap2D
-      field={latestFrame.Sw}
-      Nx={Nx} Nz={Nz} d={d}
+    <Map2DWithAxes
+      L={params.L}
+      d={d}
       vmin={Sw_minus - 0.01}
       vmax={Sw_plus + 0.01}
+      xLabel="x [m]"
+      zLabel="z [m]"
       colormapInterpolator={colormap}
-      showZeroLine={true}
-    />
+    >
+      <CanvasMap2D
+        field={latestFrame.Sw}
+        Nx={Nx} Nz={Nz} d={d}
+        vmin={Sw_minus - 0.01}
+        vmax={Sw_plus + 0.01}
+        colormapInterpolator={colormap}
+        showZeroLine={true}
+      />
+    </Map2DWithAxes>
   );
 }

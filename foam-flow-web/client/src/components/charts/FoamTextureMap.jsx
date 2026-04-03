@@ -1,5 +1,6 @@
 import React from 'react';
 import CanvasMap2D from './CanvasMap2D';
+import Map2DWithAxes from './Map2DWithAxes';
 import { useSimStore } from '../../store/simStore';
 import * as d3 from 'd3';
 
@@ -29,13 +30,23 @@ export default function FoamTextureMap() {
   const { Nx, Nz, d } = params;
 
   return (
-    <CanvasMap2D
-      field={latestFrame.nD}
-      Nx={Nx} Nz={Nz} d={d}
+    <Map2DWithAxes
+      L={params.L}
+      d={d}
       vmin={0.0}
       vmax={1.0}
+      xLabel="x [m]"
+      zLabel="z [m]"
       colormapInterpolator={d3.interpolatePlasma}
-      showZeroLine={true}
-    />
+    >
+      <CanvasMap2D
+        field={latestFrame.nD}
+        Nx={Nx} Nz={Nz} d={d}
+        vmin={0.0}
+        vmax={1.0}
+        colormapInterpolator={d3.interpolatePlasma}
+        showZeroLine={true}
+      />
+    </Map2DWithAxes>
   );
 }
