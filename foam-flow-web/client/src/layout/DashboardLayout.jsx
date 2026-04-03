@@ -90,6 +90,9 @@ export default function DashboardLayout() {
               <FrontPosition />
             </div>
             <div className="glass-panel p-3 min-h-[220px]">
+               <FrontVelocity2D />
+            </div>
+            <div className="glass-panel p-3 min-h-[220px]">
                <FrontDistance />
             </div>
             <div className="glass-panel p-3 min-h-[220px]">
