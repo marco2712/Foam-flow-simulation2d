@@ -17,7 +17,6 @@ import { useSimStore } from '../store/simStore';
 export default function DashboardLayout() {
   const { start, pause, resume, stop } = useSimulation();
   const params = useSimStore(state => state.params);
-  const status = useSimStore(state => state.status);
   const history = useSimStore(state => state.history);
   
   if (!params) {
@@ -26,27 +25,46 @@ export default function DashboardLayout() {
 
   // Get current time
   const current_t = history.hist_t.length > 0 ? history.hist_t[history.hist_t.length - 1] : 0;
+  const tmax = Math.max(params.Tmax || 1, 1);
+  const progressPct = Math.max(0, Math.min((current_t / tmax) * 100, 100));
   
   return (
     <div className="flex flex-col h-screen overflow-hidden text-[var(--color-on-surface)]">
       {/* Header bar */}
-      <div className="flex-none h-16 glass-panel flex items-center justify-between px-6 z-10 m-2 mb-0">
-        <h1 className="text-xl font-bold tracking-tight text-[var(--color-primary)]">FOAM FLOW LOCAL EQUILIBRIUM</h1>
+      <div className="flex-none h-16 glass-panel flex items-center gap-4 px-4 md:px-6 z-10 m-2 mb-0 overflow-hidden">
+        <h1 className="text-lg md:text-xl font-bold tracking-tight text-[var(--color-primary)] min-w-0 flex-1 truncate">FOAM FLOW LOCAL EQUILIBRIUM</h1>
         
         {/* Simulation Time Highlight */}
-        <div className="flex bg-[var(--color-surface-container-highest)] px-4 py-2 rounded-lg text-sm items-center gap-6 font-semibold shadow-inner border border-[var(--color-outline-variant)]">
-           <div className="flex flex-col">
-              <span className="text-[10px] text-[var(--color-on-surface-variant)] uppercase">Sim Time (t)</span>
-              <span className="text-[var(--color-primary)] text-lg tabular-nums">{current_t.toFixed(1)} s</span>
-           </div>
-           <div className="w-px h-6 bg-[var(--color-outline-variant)]"></div>
-           <div className="flex flex-col">
-              <span className="text-[10px] text-[var(--color-on-surface-variant)] uppercase">Target Time (Tmax)</span>
-              <span className="tabular-nums">{params.Tmax.toFixed(0)} s</span>
-           </div>
+        <div className="hidden lg:flex min-w-[340px] max-w-[400px] flex-col bg-[var(--color-surface-container-highest)] px-3 py-2 rounded-lg border border-[var(--color-outline-variant)] shadow-sm shrink-0">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] uppercase tracking-wider text-[var(--color-on-surface-variant)]">Simulation Clock</span>
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-baseline gap-1 min-w-0">
+              <span className="text-[10px] uppercase text-[var(--color-on-surface-variant)]">t</span>
+              <span className="text-base font-bold tabular-nums text-[var(--color-primary)] truncate">{current_t.toFixed(1)} s</span>
+            </div>
+            <div className="text-[var(--color-on-surface-variant)] text-xs">/</div>
+            <div className="flex items-baseline gap-1 min-w-0">
+              <span className="text-[10px] uppercase text-[var(--color-on-surface-variant)]">Tmax</span>
+              <span className="text-base font-semibold tabular-nums text-[var(--color-on-surface)] truncate">{params.Tmax.toFixed(0)} s</span>
+            </div>
+            <span className="text-xs tabular-nums text-[var(--color-on-surface-variant)]">{progressPct.toFixed(1)}%</span>
+          </div>
+          <div className="mt-1.5 h-1.5 rounded-full bg-[var(--color-surface)] overflow-hidden border border-[var(--color-outline-variant)]">
+            <div
+              className="h-full rounded-full"
+              style={{
+                width: `${progressPct}%`,
+                background: 'linear-gradient(90deg, var(--color-primary), var(--color-primary-container))',
+              }}
+            />
+          </div>
         </div>
 
-        <SimControls onStart={() => start(params)} onPause={pause} onResume={resume} onStop={stop} />
+        <div className="shrink-0">
+          <SimControls onStart={() => start(params)} onPause={pause} onResume={resume} onStop={stop} />
+        </div>
       </div>
 
       <div className="flex flex-1 overflow-hidden p-2 gap-2">
