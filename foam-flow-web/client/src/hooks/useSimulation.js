@@ -2,13 +2,20 @@ import { useEffect, useRef } from 'react';
 import { useSimStore } from '../store/simStore';
 import axios from 'axios';
 
+const apiBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+
+function apiUrl(path) {
+  return apiBase ? `${apiBase}${path}` : path;
+}
+
 export function useSimulation() {
   const ws = useRef(null);
   const store = useSimStore();
 
   useEffect(() => {
     const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    ws.current = new WebSocket(`${proto}//${window.location.host}/ws`);
+    const wsUrl = import.meta.env.VITE_WS_URL || `${proto}//${window.location.host}/ws`;
+    ws.current = new WebSocket(wsUrl);
 
     ws.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -48,10 +55,10 @@ export function useSimulation() {
   return {
     start: async (params) => {
       store.resetSim();
-      await axios.post('/api/simulate/start', { params });
+      await axios.post(apiUrl('/api/simulate/start'), { params });
     },
-    pause:  () => axios.post('/api/simulate/pause'),
-    resume: () => axios.post('/api/simulate/resume'),
-    stop:   () => axios.post('/api/simulate/stop'),
+    pause:  () => axios.post(apiUrl('/api/simulate/pause')),
+    resume: () => axios.post(apiUrl('/api/simulate/resume')),
+    stop:   () => axios.post(apiUrl('/api/simulate/stop')),
   };
 }

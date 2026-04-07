@@ -2,11 +2,14 @@ import React from 'react';
 import { useSimStore } from '../../store/simStore';
 import { FaPlay, FaPause, FaStop, FaDownload } from 'react-icons/fa';
 
+const apiBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+
 export default function SimControls({ onStart, onPause, onResume, onStop }) {
   const { status, progress } = useSimStore();
 
   const handleExport = () => {
-    window.open('/api/export/csv', '_blank');
+    const exportUrl = apiBase ? `${apiBase}/api/export/csv` : '/api/export/csv';
+    window.open(exportUrl, '_blank');
   };
 
   const isRunning = status === 'running';
