@@ -3,7 +3,14 @@ import { useSimStore } from '../store/simStore';
 import axios from 'axios';
 
 const apiBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
-const configuredWs = import.meta.env.VITE_WS_URL || '';
+
+function normalizeWsUrl(url) {
+  const base = (url || '').trim().replace(/\/$/, '');
+  if (!base) return '';
+  return /\/ws$/i.test(base) ? base : `${base}/ws`;
+}
+
+const configuredWs = normalizeWsUrl(import.meta.env.VITE_WS_URL || '');
 
 function apiUrl(path) {
   return apiBase ? `${apiBase}${path}` : path;
