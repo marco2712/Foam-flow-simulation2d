@@ -10,6 +10,7 @@ import CrossflowMap from '../components/charts/CrossflowMap';
 import FrontDistance from '../components/charts/FrontDistance';
 import CrossTransfer from '../components/charts/CrossTransfer';
 import PressureProfile from '../components/charts/PressureProfile';
+import PressureExtra1D from '../components/charts/PressureExtra1D';
 
 import { useSimulation } from '../hooks/useSimulation';
 import { useSimStore } from '../store/simStore';
@@ -118,6 +119,16 @@ export default function DashboardLayout() {
             </div>
             <div className="glass-panel p-3 min-h-[220px]">
                <PressureProfile />
+            </div>
+          </div>
+
+          {/* Extra 1D charts from base-code style metrics */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full max-w-6xl mx-auto pb-8">
+            <div className="glass-panel p-3 min-h-[280px]">
+              <CrossflowMap />
+            </div>
+            <div className="glass-panel p-3 min-h-[220px]">
+              <PressureExtra1D />
             </div>
           </div>
 

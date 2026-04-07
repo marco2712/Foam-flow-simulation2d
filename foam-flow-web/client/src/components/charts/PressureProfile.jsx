@@ -1,7 +1,6 @@
 import React from 'react';
-import GenericLineChart from './GenericLineChart';
+import FoamPressureProfile1D from './FoamPressureProfile1D';
 
 export default function PressureProfile() {
-  // Using the historical recovery percentage here although named PressureProfile for historical reasons or as a placeholder.
-  return <GenericLineChart dataKey1="hist_rec_pct" title="Recovery (%)" xLabel="Time (s)" yLabel="%" />;
+  return <FoamPressureProfile1D title="Presion de Espuma P(x) [bar]" />;
 }
