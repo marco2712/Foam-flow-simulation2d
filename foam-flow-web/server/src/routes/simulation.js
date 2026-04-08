@@ -21,16 +21,18 @@ function broadcast(data) {
   });
 }
 
+
 router.post('/start', (req, res) => {
   const { params } = req.body;
   if (state.status === 'running') {
     return res.status(400).json({ error: 'Simulation already running' });
   }
-  
+
   // Merge any params from UI on top of defaults
   if (params) {
     state.params = { ...state.params, ...params };
   }
+  // Ahora sí, limpiar el estado después de actualizar los parámetros
   resetState();
   state.status = 'running';
   // Broadcast running status so UI updates immediately

@@ -3,6 +3,7 @@ import { create } from 'zustand';
 export const useSimStore = create((set, get) => ({
   status: 'idle',
   progress: 0,
+  // Inicializa params como null, pero al setear nuevos params, asegura que frameEvery tenga un valor por defecto si no viene del backend
   params: null,
   history: {
     hist_t: [], hist_fp1: [], hist_fp2: [],
@@ -14,7 +15,7 @@ export const useSimStore = create((set, get) => ({
 
   setStatus:   (status)   => set({ status }),
   setProgress: (progress) => set({ progress }),
-  setParams:   (params)   => set({ params }),
+  setParams:   (params)   => set(s => ({ params: { frameEvery: 10, ...params } })),
   getParams:   ()         => get().params,
 
   updateParams: (patch) => set(s => ({ params: { ...s.params, ...patch } })),

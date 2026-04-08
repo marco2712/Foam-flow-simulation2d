@@ -5,8 +5,13 @@ import { advectionUpwindX, divDiffusion, applyBCs } from './operators.js';
 let paused = false;
 let running = true;
 
+
 const { params } = workerData;
-const { Nx, Nz, Sw_plus, Sw_minus, Sw_star, A, u1, u2, d, sigma, c_cap, Swc, Sgr, mu_w, mu_g, phi1, phi2, k1, k2, dt, Tmax, L } = params;
+// Permitir que el usuario pase frameEvery en params, si no, usar 100 por defecto
+const { Nx, Nz, Sw_plus, Sw_minus, Sw_star, A, u1, u2, d, sigma, c_cap, Swc, Sgr, mu_w, mu_g, phi1, phi2, k1, k2, dt, Tmax, L, frameEvery } = params;
+
+// Control de cada cuántos pasos se envía un frame (múltiplo de 10, mínimo 10)
+const FRAME_EVERY = Math.max(10, Math.round((frameEvery ?? 100) / 10) * 10);
 
 const dx = L / Nx;
 const dz = (2 * d) / Nz;
@@ -148,8 +153,8 @@ function runBatch() {
     step++;
   }
 
-  // Send frame every 200 steps with accumulated history + 1D profiles
-  if (step % 200 < batchSize || step > Nt) {
+  // Enviar frame cada FRAME_EVERY pasos con historia acumulada y perfiles 1D
+  if (step % FRAME_EVERY < batchSize || step > Nt) {
     const SwL1 = [], SwL2 = [], nDL1 = [], nDL2 = [];
     for (let i = 0; i <= Nx; i++) {
       SwL1.push(Sw[midL1 * (Nx + 1) + i]);

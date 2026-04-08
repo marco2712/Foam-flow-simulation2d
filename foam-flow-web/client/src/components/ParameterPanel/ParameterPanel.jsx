@@ -23,7 +23,7 @@ const PARAMS_CONFIG = [
   { key: 'c_cap', label: 'c_{cap}', desc: "Capillary Const", min: 0.001, max: 0.1, step: 0.001 },
   { key: 'A', label: 'A', desc: "Foam Gen. Parameter", min: 10, max: 1000, step: 10 },
   { key: 'Kc', label: 'K_c', desc: "Coalescence Rate", min: 10, max: 1000, step: 10 },
-  { key: 'theta_s', label: '\\theta_s', desc: "Trapping Parameter", min: 1e-5, max: 1e-2, step: 'log' },
+  { key: 'theta_s', label: '\\theta_s', desc: "Trapping Parameter", min: 0, max: 1e-2, step: 'log' },
   { key: 'Tmax', label: 'T_{max}', desc: "Total Sim Time", min: 1000, max: 50000, step: 100, unit: 's' },
   { key: 'Nx', label: 'N_x', desc: "Grid Cells X", min: 50, max: 500, step: 10 },
   { key: 'Nz', label: 'N_z', desc: "Grid Cells Z", min: 10, max: 100, step: 5 },
