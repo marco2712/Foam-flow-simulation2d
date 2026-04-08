@@ -15,7 +15,7 @@ export const useSimStore = create((set, get) => ({
 
   setStatus:   (status)   => set({ status }),
   setProgress: (progress) => set({ progress }),
-  setParams:   (params)   => set(s => ({ params: { frameEvery: 10, ...params } })),
+  setParams:   (params)   => set({ params }),
   getParams:   ()         => get().params,
 
   updateParams: (patch) => set(s => ({ params: { ...s.params, ...patch } })),
