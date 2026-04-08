@@ -67,6 +67,8 @@ export default function CrossflowMap() {
 
     const { Sw, nD } = latestFrame;
     const { Nx, Nz, d, L, phi1, phi2, k1, k2 } = params;
+    const thetaRaw = Number(params.theta_s);
+    const thetaS = Number.isFinite(thetaRaw) ? thetaRaw : 1;
 
     if (!Sw || !nD || Sw.length === 0 || nD.length === 0) return null;
 
@@ -94,7 +96,7 @@ export default function CrossflowMap() {
       const idxLo = midJ * (Nx + 1) + i;
       const idxHi = (midJ + 1) * (Nx + 1) + i;
       const Di = 2 * Dc[idxHi] * Dc[idxLo] / (Dc[idxHi] + Dc[idxLo] + 1e-30);
-      const uz = Di * (Sw[idxLo] - Sw[idxHi]) / dz;
+      const uz = thetaS <= 0 ? 0 : Di * (Sw[idxLo] - Sw[idxHi]) / dz;
       uzCross[i] = uz;
       uzArr[idxLo] = uz;
     }

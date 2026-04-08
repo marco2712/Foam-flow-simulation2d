@@ -69,10 +69,13 @@ function calcTheory(params) {
 
   const v1_iso = (params.u1 / params.phi1) * (fw1p - fw1m) / (dSw || 1e-30);
   const v2_iso = (params.u2 / params.phi2) * (fw2p - fw2m) / (dSw || 1e-30);
-  const theta_s = params.theta_s || 3.2e-4;
+  const theta_s = params.theta_s ?? 3.2e-4;
   const a1 = params.phi1 * dSw * theta_s;
   const a2 = params.phi2 * dSw * theta_s;
-  const v_theory = (a1 * v1_iso + a2 * v2_iso) / (a1 + a2 + 1e-30);
+  // Evitar NaN si theta_s=0
+  const v_theory = (a1 + a2) > 0
+    ? (a1 * v1_iso + a2 * v2_iso) / (a1 + a2)
+    : (v1_iso + v2_iso) / 2.0;
 
   return { v1_iso, v2_iso, v_theory };
 }
@@ -102,6 +105,8 @@ function buildProfilesFromLastFrame() {
   const dpdxL1 = [];
   const dpdxL2 = [];
   const uzCross = [];
+  const thetaRaw = Number(p.theta_s);
+  const thetaS = Number.isFinite(thetaRaw) ? thetaRaw : 1;
 
   for (let i = 0; i <= Nx; i++) {
     const idxL1 = midL1 * (Nx + 1) + i;
@@ -119,8 +124,12 @@ function buildProfilesFromLastFrame() {
     const idxHi = (midJ + 1) * (Nx + 1) + i;
     const DcLo = Math.max(0, dCap(Sw[idxLo], nD[idxLo], p.k2, p.phi2, p));
     const DcHi = Math.max(0, dCap(Sw[idxHi], nD[idxHi], p.k1, p.phi1, p));
-    const Di = (2 * DcHi * DcLo) / (DcHi + DcLo + 1e-30);
-    uzCross.push(Di * (Sw[idxLo] - Sw[idxHi]) / dz);
+    if (thetaS <= 0) {
+      uzCross.push(0);
+    } else {
+      const Di = (2 * DcHi * DcLo) / (DcHi + DcLo + 1e-30);
+      uzCross.push(Di * (Sw[idxLo] - Sw[idxHi]) / dz);
+    }
 
     out.push({
       x_m: i * dx,

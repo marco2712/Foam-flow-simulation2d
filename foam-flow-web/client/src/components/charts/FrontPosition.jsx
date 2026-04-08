@@ -55,9 +55,10 @@ export default function FrontPosition() {
 
     const v1_iso    = (u1 / phi1) * (fw1p - fw1m) / dSw;
     const v2_iso    = (u2 / phi2) * (fw2p - fw2m) / dSw;
-    const a1        = phi1 * dSw * (theta_s || 3.2e-4);
-    const a2        = phi2 * dSw * (theta_s || 3.2e-4);
-    const v_teorico = (a1 * v1_iso + a2 * v2_iso) / (a1 + a2);
+    const thetaEff  = theta_s ?? 3.2e-4;
+    const a1        = phi1 * dSw * thetaEff;
+    const a2        = phi2 * dSw * thetaEff;
+    const v_teorico = (a1 + a2) > 0 ? (a1 * v1_iso + a2 * v2_iso) / (a1 + a2) : (v1_iso + v2_iso) / 2.0;
 
     return { v1_iso, v2_iso, v_teorico };
   }, [params]);

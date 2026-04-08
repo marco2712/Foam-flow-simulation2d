@@ -15,6 +15,8 @@ const FRAME_EVERY = Math.max(10, Math.round((frameEvery ?? 100) / 10) * 10);
 
 const dx = L / Nx;
 const dz = (2 * d) / Nz;
+const thetaRaw = Number(params.theta_s);
+const thetaS = Number.isFinite(thetaRaw) ? thetaRaw : 1;
 const numCells = (Nz + 1) * (Nx + 1);
 
 const Sw     = new Float64Array(numCells);
@@ -107,7 +109,7 @@ function runBatch() {
     }
 
     const adv  = advectionUpwindX(Fw, u_2d, Nx, Nz, dx);
-    const diff = divDiffusion(Sw, Dc, Nx, Nz, dx, dz);
+    const diff = divDiffusion(Sw, Dc, Nx, Nz, dx, dz, thetaS);
 
     const Sw_new = new Float64Array(numCells);
     for (let idx = 0; idx < numCells; idx++) {
@@ -118,11 +120,13 @@ function runBatch() {
     // Crossflow at z=0 interface
     const midJ = Math.floor(Nz / 2);
     let q_cross = 0;
-    for (let i = 0; i <= Nx; i++) {
-      const idxLo = midJ * (Nx + 1) + i;
-      const idxHi = (midJ + 1) * (Nx + 1) + i;
-      const Di = 2 * Dc[idxHi] * Dc[idxLo] / (Dc[idxHi] + Dc[idxLo] + 1e-30);
-      q_cross += Di * (Sw_new[idxLo] - Sw_new[idxHi]) / dz * dx;
+    if (thetaS > 0) {
+      for (let i = 0; i <= Nx; i++) {
+        const idxLo = midJ * (Nx + 1) + i;
+        const idxHi = (midJ + 1) * (Nx + 1) + i;
+        const Di = 2 * Dc[idxHi] * Dc[idxLo] / (Dc[idxHi] + Dc[idxLo] + 1e-30);
+        q_cross += Di * (Sw_new[idxLo] - Sw_new[idxHi]) / dz * dx;
+      }
     }
 
     // nD local equilibrium: nD = nD_LE(Sw_new)

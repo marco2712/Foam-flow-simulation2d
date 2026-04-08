@@ -10,10 +10,11 @@ export function advectionUpwindX(q, u, Nx, Nz, dx) {
   return adv;
 }
 
-export function divDiffusion(S, D, Nx, Nz, dx, dz) {
+export function divDiffusion(S, D, Nx, Nz, dx, dz, theta_s = 1) {
   const div = new Float64Array((Nz + 1) * (Nx + 1));
+  const thetaS = Number(theta_s);
   
-  // X-axis diffusion
+  // X-axis diffusion (siempre activa)
   for (let j = 0; j <= Nz; j++) {
     for (let i = 1; i < Nx; i++) {
       const idx = j * (Nx + 1) + i;
@@ -29,20 +30,23 @@ export function divDiffusion(S, D, Nx, Nz, dx, dz) {
       div[idx] += (flux_x_next - flux_x_prev) / dx;
     }
   }
+  
+  // theta_s=0: escenario sin transferencia vertical explícita
+  if (!Number.isFinite(thetaS) || thetaS <= 0) return div;
 
-  // Z-axis diffusion
+  // Z-axis diffusion: flujo físico puro, sin reescalado por theta_s
   for (let j = 1; j < Nz; j++) {
     for (let i = 0; i <= Nx; i++) {
       const idx = j * (Nx + 1) + i;
       const j_next = (j + 1) * (Nx + 1) + i;
       const j_prev = (j - 1) * (Nx + 1) + i;
-      
+
       const Dz_next = 2.0 * D[j_next] * D[idx] / (D[j_next] + D[idx] + 1e-30);
       const Dz_prev = 2.0 * D[idx] * D[j_prev] / (D[idx] + D[j_prev] + 1e-30);
-      
+
       const flux_z_next = Dz_next * (S[j_next] - S[idx]) / dz;
       const flux_z_prev = Dz_prev * (S[idx] - S[j_prev]) / dz;
-      
+
       div[idx] += (flux_z_next - flux_z_prev) / dz;
     }
   }

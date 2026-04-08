@@ -232,6 +232,10 @@ def div_diffusion(S, D):
     flux_x = D_x * (S[:, 1:] - S[:, :-1]) / dx
     div_x  = np.zeros_like(S)
     div_x[:, 1:-1] = (flux_x[:, 1:] - flux_x[:, :-1]) / dx
+    # theta_s=0: escenario sin transferencia vertical explícita
+    if theta_s == 0:
+        return div_x
+
     # eje z
     D_z   = 2.0 * D[1:, :] * D[:-1, :] / (D[1:, :] + D[:-1, :] + 1e-30)
     flux_z = D_z * (S[1:, :] - S[:-1, :]) / dz
@@ -597,7 +601,10 @@ def mostrar_frame(Sw_arr, nD_arr, C_arr, t,
     # Flujo capilar cruza en interfaz (índice 25)
     Dc_arr = np.clip(D_cap(Sw_arr, nD_arr, k_2d, phi_2d), 0.0, None)
     Dc_z_int = 2.0 * Dc_arr[26, :] * Dc_arr[25, :] / (Dc_arr[26, :] + Dc_arr[25, :] + 1e-30)
-    uz_cross = Dc_z_int * (Sw_arr[25, :] - Sw_arr[26, :]) / dz
+    if theta_s == 0:
+        uz_cross = np.zeros_like(Sw_arr[25, :])
+    else:
+        uz_cross = Dc_z_int * (Sw_arr[25, :] - Sw_arr[26, :]) / dz
     
     # Representado puramente en la interfaz física
     uz_arr[25, :] = uz_cross
@@ -776,7 +783,10 @@ for step in range(1, Nt + 1):
     # ── Transferencia cruzada (Cross-flow en z=0) ────────────────────────────
     # Para Nz=50, índice 25 -> z=0. Flujo ascendente (Capa 2 -> Capa 1).
     Dc_z_int = 2.0 * Dc[26, :] * Dc[25, :] / (Dc[26, :] + Dc[25, :] + 1e-30)
-    q_cross = float(np.sum(Dc_z_int * (Sw[25, :] - Sw[26, :]) / dz * dx))
+    if theta_s == 0:
+        q_cross = 0.0
+    else:
+        q_cross = float(np.sum(Dc_z_int * (Sw[25, :] - Sw[26, :]) / dz * dx))
 
     # ── Eficiencia de Barrido Volumétrico ────────────
     # Proporción del área física contactada por el frente inyectado
