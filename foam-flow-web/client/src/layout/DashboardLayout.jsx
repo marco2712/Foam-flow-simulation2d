@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ParameterPanel from '../components/ParameterPanel/ParameterPanel';
 import SimControls from '../components/controls/SimControls';
 import SaturationMap from '../components/charts/SaturationMap';
@@ -19,9 +19,30 @@ export default function DashboardLayout() {
   const { start, pause, resume, stop } = useSimulation();
   const params = useSimStore(state => state.params);
   const history = useSimStore(state => state.history);
+  const [elapsedSec, setElapsedSec] = useState(0);
+
+  useEffect(() => {
+    if (params) return;
+    const timer = setInterval(() => setElapsedSec((s) => s + 1), 1000);
+    return () => clearInterval(timer);
+  }, [params]);
   
   if (!params) {
-    return <div className="p-8 flex items-center justify-center text-[var(--color-on-surface)]">Connecting to engine...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center p-8 text-[var(--color-on-surface)]">
+        <div className="glass-panel rounded-xl p-8 w-full max-w-md text-center border border-[var(--color-outline-variant)]/40">
+          <div className="mx-auto mb-4 w-14 h-14 rounded-full border-2 border-[var(--color-outline-variant)] relative">
+            <div className="absolute inset-[7px] rounded-full border border-[var(--color-outline-variant)]/50" />
+            <div className="absolute left-1/2 top-1/2 w-[2px] h-4 bg-[var(--color-primary)] origin-bottom -translate-x-1/2 -translate-y-full animate-spin" style={{ animationDuration: '1.5s' }} />
+            <div className="absolute left-1/2 top-1/2 w-[2px] h-5 bg-[var(--color-secondary)] origin-bottom -translate-x-1/2 -translate-y-full animate-spin" style={{ animationDuration: '12s' }} />
+            <div className="absolute left-1/2 top-1/2 w-2 h-2 rounded-full bg-[var(--color-on-surface)] -translate-x-1/2 -translate-y-1/2" />
+          </div>
+          <h2 className="text-xl font-bold mb-2">Connecting to engine...</h2>
+          <p className="text-sm text-[var(--color-on-surface-variant)]">Establishing secure link with simulation backend.</p>
+          <p className="mt-3 font-mono text-sm text-[var(--color-primary)]">{elapsedSec}s elapsed</p>
+        </div>
+      </div>
+    );
   }
 
   // Get current time
