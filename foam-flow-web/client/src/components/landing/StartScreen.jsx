@@ -119,7 +119,7 @@ export default function StartScreen({ onStart }) {
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             <div className="text-center mb-20">
               <h2 className="font-display font-black text-4xl mb-4 text-[var(--color-on-surface)]">Simulator Engine Modules</h2>
-              <p className="font-sans text-[var(--color-on-surface-variant)]">Configure environment variables with scientific precision.</p>
+              <p className="font-sans text-[var(--color-on-surface-variant)]">Brief reference of the parameters used by the simulator.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -127,9 +127,9 @@ export default function StartScreen({ onStart }) {
                 <div className="w-16 h-16 bg-[var(--color-surface-container)] rounded-lg mb-8 flex items-center justify-center group-hover:bg-[var(--color-primary-container)] transition-colors duration-300">
                   <span className="text-2xl text-[var(--color-on-surface-variant)] group-hover:text-[var(--color-on-primary)]">#</span>
                 </div>
-                <h3 className="font-display font-bold text-2xl mb-4 text-[var(--color-on-surface)]">Porous Media</h3>
+                <h3 className="font-display font-bold text-2xl mb-4 text-[var(--color-on-surface)]">Geometry and Grid</h3>
                 <p className="font-sans text-[var(--color-on-surface-variant)] leading-relaxed mb-6">
-                  Define matrix geometry, grain-size effects, and layered permeability for realistic reservoir descriptions.
+                  Defines domain and discretization: <strong>L</strong> (domain length), <strong>d</strong> (layer thickness), <strong>Nx</strong> and <strong>Nz</strong> (grid cells), and <strong>Tmax</strong> (total simulation time).
                 </p>
                 <div className="h-1 w-12 bg-[var(--color-outline-variant)]/30 group-hover:w-full group-hover:bg-[var(--color-primary)] transition-all duration-500" />
               </div>
@@ -138,9 +138,9 @@ export default function StartScreen({ onStart }) {
                 <div className="w-16 h-16 bg-[var(--color-surface-container)] rounded-lg mb-8 flex items-center justify-center group-hover:bg-[var(--color-secondary)] transition-colors duration-300">
                   <span className="text-2xl text-[var(--color-on-surface-variant)] group-hover:text-white">~</span>
                 </div>
-                <h3 className="font-display font-bold text-2xl mb-4 text-[var(--color-on-surface)]">Fluid Dynamics</h3>
+                <h3 className="font-display font-bold text-2xl mb-4 text-[var(--color-on-surface)]">Layer and Flow Properties</h3>
                 <p className="font-sans text-[var(--color-on-surface-variant)] leading-relaxed mb-6">
-                  Configure viscosity, fractional flow response, and capillary interactions in stratified transport.
+                  Controls porous layers and injection: <strong>phi1, phi2</strong> (porosity), <strong>k1, k2</strong> (permeability), and <strong>u1, u2</strong> (injection velocity in each layer).
                 </p>
                 <div className="h-1 w-12 bg-[var(--color-outline-variant)]/30 group-hover:w-full group-hover:bg-[var(--color-secondary)] transition-all duration-500" />
               </div>
@@ -149,9 +149,9 @@ export default function StartScreen({ onStart }) {
                 <div className="w-16 h-16 bg-[var(--color-surface-container)] rounded-lg mb-8 flex items-center justify-center group-hover:bg-[var(--color-tertiary)]/25 transition-colors duration-300">
                   <span className="text-2xl text-[var(--color-on-surface-variant)] group-hover:text-[var(--color-on-surface)]">o</span>
                 </div>
-                <h3 className="font-display font-bold text-2xl mb-4 text-[var(--color-on-surface)]">Foam Tuning</h3>
+                <h3 className="font-display font-bold text-2xl mb-4 text-[var(--color-on-surface)]">Saturation and Foam Physics</h3>
                 <p className="font-sans text-[var(--color-on-surface-variant)] leading-relaxed mb-6">
-                  Adjust surfactant response, gas fraction, and stability constants for sweep optimization.
+                  Sets multiphase behavior: <strong>Sw_minus, Sw_plus, Swc, Sgr, Sw_star</strong> (saturation limits), <strong>mu_w, mu_g</strong> (viscosities), <strong>sigma, c_cap</strong> (capillarity), and <strong>A, Kc, theta_s</strong> (foam generation, coalescence, and trapping).
                 </p>
                 <div className="h-1 w-12 bg-[var(--color-outline-variant)]/30 group-hover:w-full group-hover:bg-[var(--color-tertiary)] transition-all duration-500" />
               </div>
