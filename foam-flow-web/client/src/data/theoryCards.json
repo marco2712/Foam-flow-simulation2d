@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Porous Media",
+    "content": "Porosity φ relates pore volume to total volume, while permeability k measures how easily a fluid moves through the solid matrix. In stratified porous media, these properties vary between layers and produce interlayer mass transfer. Their mathematical description is based on Darcy's law and extended foam-flow models.",
+    "importantTerms": ["Porosity", "permeability", "Darcy's law", "foam-flow", "stratified porous media"]
+  },
+  {
+    "title": "Finite Elements",
+    "content": "The Finite Element Method (FEM) is a numerical technique used to simulate physical behavior under loads, heat, or fluid flow. It divides the domain into a mesh of elements and nodes to approximate complex equations. Through discretization and variational formulation, FEM provides accurate solutions in two-dimensional domains.",
+    "importantTerms": ["Finite Element Method", "FEM", "numerical technique", "discretization", "variational formulation"]
+  },
+  {
+    "title": "Two-Layer Foam Flow",
+    "content": "Two-layer foam flow is modeled using a simplified kinetic formulation under local equilibrium, with interlayer coupling through mass-exchange terms. The domain consists of two parallel layers with permeabilities k1 and k2. The resulting coupled equations track water saturation Swi and foam texture nDi, enabling analysis of how heterogeneity impacts sweep efficiency.",
+    "importantTerms": ["foam front", "local equilibrium", "interlayer coupling", "water saturation", "heterogeneity"]
+  }
+]

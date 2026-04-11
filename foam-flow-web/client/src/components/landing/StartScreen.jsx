@@ -1,4 +1,14 @@
-import React from 'react';
+
+
+import BubblesBackground from './BubblesBackground';
+import theoryCards from '../../data/theoryCards.json';
+import ScrollTypewriterText from './ScrollTypewriterText';
+
+const theorySectionImages = [
+  '/images/porous.jpg',
+  '/images/finite-elements/v882-aew-41.jpg',
+  '/images/foam.jpg',
+];
 
 export default function StartScreen({ onStart }) {
   return (
@@ -25,6 +35,10 @@ export default function StartScreen({ onStart }) {
 
       <main className="pt-16 overflow-x-hidden">
         <section id="hero" className="relative min-h-[920px] flex flex-col items-center justify-center px-6 overflow-hidden">
+          {/* Burbujas delante de la imagen del hero */}
+          <div className="absolute inset-0 z-10 pointer-events-none">
+            <BubblesBackground />
+          </div>
           <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
             <img
               alt="Foam Flow Visualization"
@@ -33,7 +47,6 @@ export default function StartScreen({ onStart }) {
             />
             <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-surface)]/20 via-[var(--color-surface)]/65 to-[var(--color-surface)]" />
           </div>
-
           <div className="relative z-10 max-w-4xl text-center">
             <div className="inline-flex items-center px-4 py-1 mb-8 rounded-full bg-[var(--color-surface-container-highest)] text-[var(--color-on-surface)] font-display text-xs font-bold tracking-widest uppercase">
               Local Equilibrium Solver
@@ -60,53 +73,47 @@ export default function StartScreen({ onStart }) {
               </a>
             </div>
           </div>
-
-          <div className="absolute bottom-12 right-8 hidden lg:block glass-panel p-6 rounded-xl border border-[var(--color-outline-variant)]/40 shadow-2xl max-w-sm">
-            <div className="flex justify-between items-center mb-4">
-              <span className="font-display text-xs font-bold text-[var(--color-primary)] uppercase">Live Parameters</span>
-              <div className="w-2 h-2 rounded-full bg-[var(--color-secondary)] animate-pulse" />
-            </div>
-            <div className="space-y-3 font-mono text-[11px] text-[var(--color-on-surface-variant)]">
-              <div className="flex justify-between"><span>Permeability Ratio</span> <span className="text-[var(--color-on-surface)] font-bold">1:4.2</span></div>
-              <div className="flex justify-between"><span>Saturation Gradient</span> <span className="text-[var(--color-on-surface)] font-bold">0.82 DS</span></div>
-              <div className="flex justify-between"><span>Capillary Number</span> <span className="text-[var(--color-on-surface)] font-bold">1.4e-6</span></div>
-            </div>
-          </div>
         </section>
 
         <section id="framework" className="py-24 bg-[var(--color-surface-container-low)]">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-20 items-center">
-              <div>
-                <h2 className="font-display font-bold text-3xl mb-8 tracking-tight text-[var(--color-on-surface)]">Computational Physics Framework</h2>
-                <div className="space-y-6 font-sans text-lg text-[var(--color-on-surface-variant)] leading-relaxed">
-                  <p>
-                    The model resolves two-layer porous transport with capillary coupling and foam mobility control under local equilibrium assumptions.
-                  </p>
-                  <p>
-                    The solver tracks water saturation, foam texture, front position, and interlayer transfer to compare operational scenarios with scientific rigor.
-                  </p>
-                </div>
-                <div className="mt-10 flex items-center gap-4">
-                  <div className="p-3 bg-[var(--color-primary)]/10 rounded-full">
-                    <span className="text-[var(--color-primary)] text-xl">*</span>
+            <h2 className="font-display font-bold text-3xl mb-8 tracking-tight text-[var(--color-on-surface)] text-center">Theory</h2>
+            <div className="w-full max-w-5xl mx-auto mb-20 space-y-8">
+              {theoryCards.map((section, index) => (
+                <section
+                  key={section.title}
+                  className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-outline-variant)]/40 shadow-sm p-7 md:p-10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start">
+                    <div className="md:col-span-4">
+                      <img
+                        src={theorySectionImages[index]}
+                        alt={section.title}
+                        className="w-full h-56 md:h-64 object-cover rounded-xl border border-[var(--color-outline-variant)]/40"
+                      />
+                    </div>
+                    <div className="md:col-span-8">
+                      <div className="font-display font-black text-xs tracking-[0.18em] uppercase text-[var(--color-primary)] mb-3">
+                        Section {index + 1}
+                      </div>
+                      <h3 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-[var(--color-on-surface)] mb-5">
+                        {section.title}
+                      </h3>
+                      <ScrollTypewriterText
+                        text={section.content}
+                        importantTerms={section.importantTerms}
+                        speed={10}
+                        threshold={0.3}
+                      />
+                    </div>
                   </div>
-                  <span className="font-display text-sm font-bold tracking-tight uppercase text-[var(--color-on-surface)]">Peer reviewed formulation</span>
-                </div>
-              </div>
-
-              <div className="relative">
-                <div className="aspect-square bg-[var(--color-surface)] rounded-xl p-8 shadow-inner overflow-hidden flex items-center justify-center">
-                  <img
-                    alt="Laboratory analysis"
-                    className="w-full h-full object-cover rounded-lg opacity-90"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4Gdcshu9MqHL66FcSPsv-PQlCuItMgb_1m_ntg7Hf57_5WRgEwLYCoz2zOdDtDwRcQVmsD1bygSDaJT5bUCknaXpFhRuxx5lyjREpkLV_LicqJxREsAVg8ZVM6f6_6TeIwBh7j9Fnes-PSDViFNl78nxut0EBxu2VR7r9bHQFuyTTl0yRlhJxfi8hRlR4bipLTkoOPR2aUX1KMmlTtw_CX9wKUAZNwIJFzgAWReNDb5LnfGKeF0HsCaTLU05_ZuxaA0kPUGdUg0Md"
-                  />
-                </div>
-              </div>
+                </section>
+              ))}
             </div>
           </div>
         </section>
+
+
 
         <section id="modules" className="py-32 bg-[var(--color-surface)]">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
