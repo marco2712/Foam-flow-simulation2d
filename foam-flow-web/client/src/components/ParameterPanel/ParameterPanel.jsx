@@ -27,7 +27,14 @@ const PARAMS_CONFIG = [
   { key: 'Tmax', label: 'T_{max}', desc: "Total Sim Time", min: 1000, max: 50000, step: 100, unit: 's' },
   { key: 'Nx', label: 'N_x', desc: "Grid Cells X", min: 50, max: 500, step: 10 },
   { key: 'Nz', label: 'N_z', desc: "Grid Cells Z", min: 10, max: 100, step: 5 },
+  { key: 'zExtractL1', label: 'Z_{L1}', desc: "Layer-1 Guide Ratio", min: 0.0, max: 1.0, step: 0.01 },
+  { key: 'zExtractL2', label: 'Z_{L2}', desc: "Layer-2 Guide Ratio", min: 0.0, max: 1.0, step: 0.01 },
 ];
+
+const PARAMS_FALLBACK = {
+  zExtractL1: 0.5,
+  zExtractL2: 0.5,
+};
 
 function LogSlider({ value, min, max, onChange, disabled }) {
   const minLog = Math.log10(min);
@@ -85,9 +92,9 @@ export default function ParameterPanel() {
       )}
 
       {PARAMS_CONFIG.map(({ key, label, desc, min, max, step, unit }) => {
-        const val = params[key];
+        const val = params[key] ?? PARAMS_FALLBACK[key];
         const isLog = step === 'log';
-        if (val === undefined) return null; // Wait for backend defaults
+        if (val === undefined) return null; // Keep hiding truly unknown params
 
         return (
           <div key={key} className="flex flex-col gap-1 mb-2">

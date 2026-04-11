@@ -18,7 +18,10 @@ export default function CanvasMap2D({
   field, Nx, Nz, d,
   vmin, vmax,
   colormapInterpolator,
-  showZeroLine
+  showZeroLine,
+  showLayerGuides = false,
+  layer1GuideRatio = 0.5,
+  layer2GuideRatio = 0.5
 }) {
   const canvasRef = useRef(null);
 
@@ -122,7 +125,51 @@ export default function CanvasMap2D({
       ctx.restore();
     }
 
-  }, [field, Nx, Nz, vmin, vmax, colormapInterpolator, showZeroLine]);
+    // Layer guide lines matching base-code idea (Z_EXTRACT_L1 / Z_EXTRACT_L2)
+    // ratio=0.0 -> interface (z=0), ratio=1.0 -> external boundary (+/-d)
+    if (showLayerGuides) {
+      const half = Nz / 2;
+      const r1 = Math.max(0, Math.min(layer1GuideRatio, 1));
+      const r2 = Math.max(0, Math.min(layer2GuideRatio, 1));
+
+      const jL1 = Math.round(half + r1 * half); // upper layer row index
+      const jL2 = Math.round(half - r2 * half); // lower layer row index
+
+      const rowToPy = (j) => Math.round((1 - j / Nz) * (outH - 1));
+      const pyL1 = rowToPy(jL1);
+      const pyL2 = rowToPy(jL2);
+
+      ctx.save();
+      ctx.setLineDash([Math.round(outW / 80), Math.round(outW / 60)]);
+      ctx.lineWidth = Math.max(1, SCALE - 1);
+
+      ctx.strokeStyle = 'rgba(59, 130, 246, 0.95)'; // blue
+      ctx.beginPath();
+      ctx.moveTo(0, pyL1);
+      ctx.lineTo(outW, pyL1);
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(34, 197, 94, 0.95)'; // green
+      ctx.beginPath();
+      ctx.moveTo(0, pyL2);
+      ctx.lineTo(outW, pyL2);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+  }, [
+    field,
+    Nx,
+    Nz,
+    vmin,
+    vmax,
+    colormapInterpolator,
+    showZeroLine,
+    showLayerGuides,
+    layer1GuideRatio,
+    layer2GuideRatio
+  ]);
 
   return (
     <canvas

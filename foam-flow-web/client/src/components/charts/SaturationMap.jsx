@@ -24,7 +24,7 @@ export default function SaturationMap() {
     );
   }
 
-  const { Sw_plus, Sw_minus, Nx, Nz, d } = params;
+  const { Sw_plus, Sw_minus, Nx, Nz, d, zExtractL1 = 0.5, zExtractL2 = 0.5 } = params;
 
   // RdYlBu_r: t=0 → blue (low=Sw_minus), t=1 → red (high=Sw_plus)
   // d3.interpolateRdYlBu(0) = RED, d3.interpolateRdYlBu(1) = BLUE
@@ -48,6 +48,9 @@ export default function SaturationMap() {
         vmax={Sw_plus + 0.01}
         colormapInterpolator={colormap}
         showZeroLine={true}
+        showLayerGuides={true}
+        layer1GuideRatio={zExtractL1}
+        layer2GuideRatio={zExtractL2}
       />
     </Map2DWithAxes>
   );

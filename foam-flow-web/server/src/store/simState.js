@@ -31,6 +31,8 @@ export const state = {
     Nz: 40,
     dt: 0.20,           // CFL check: v*dt/dx = 1.8e-4*0.2/0.005 = 0.0072 → stable
     Tmax: 5000.0,       // CONFIRMED: "t=5000s (100%)" in image title
+    zExtractL1: 0.5,    // 0=interface, 1=top boundary
+    zExtractL2: 0.5,    // 0=interface, 1=bottom boundary
   },
   status: 'idle',
   progress: 0

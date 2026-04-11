@@ -183,6 +183,8 @@ router.get('/csv', (req, res) => {
     'theory_velocity_m_per_s',
     'layer1_isotropic_velocity_m_per_s',
     'layer2_isotropic_velocity_m_per_s',
+    'z_extract_layer1_ratio',
+    'z_extract_layer2_ratio',
   ].join(',');
 
   const timeRows = hist_t.map((t, i) => {
@@ -221,6 +223,8 @@ router.get('/csv', (req, res) => {
       theory.v_theory,
       theory.v1_iso,
       theory.v2_iso,
+      state.params.zExtractL1 ?? 0.5,
+      state.params.zExtractL2 ?? 0.5,
     ].join(',');
   }).join('\n');
 
