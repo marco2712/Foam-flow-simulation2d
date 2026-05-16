@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario Detallado - Foam Flow Web</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f8fafc;
+        }
+        h1, h2, h3 { color: #0f172a; }
+        h1 { border-bottom: 3px solid #06b6d4; padding-bottom: 0.5rem; font-size: 2.5em; }
+        h2 { border-bottom: 1px solid #cbd5e1; padding-bottom: 0.3rem; margin-top: 2.5rem; color: #0369a1; }
+        h3 { color: #0284c7; margin-top: 1.5rem; }
+        p { margin-bottom: 1rem; }
+        .alert { background-color: #e0f2fe; border-left: 4px solid #0284c7; padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .warning { background-color: #fef3c7; border-left: 4px solid #d97706; padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        code { background-color: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; font-weight: 500; color: #b91c1c; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; background-color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        th, td { border: 1px solid #e2e8f0; padding: 0.75rem; text-align: left; }
+        th { background-color: #f1f5f9; font-weight: 600; color: #334155; }
+        ul, ol { margin-bottom: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <h1>Manual de Usuario: Foam Flow Web  </h1>
+    <p>Bienvenido al simulador bidimensional de inyección de espuma basado en equilibrio local. Esta herramienta ha sido diseñada para analizar el desplazamiento multifásico, perfiles de presión, flujo cruzado (crossflow) y texturas de la espuma dentro de medios porosos estratificados.</p>
+
+    <h2>1. Arquitectura de la Interfaz</h2>
+    <p>La aplicación se divide en tres zonas principales una vez que presiona <strong>"Simular"</strong> desde la página de inicio:</p>
+    <ul>
+        <li><strong>Panel de Controles (Izquierda):</strong> Permite ajustar exhaustivamente las condiciones del yacimiento virtual y de la malla numérica.</li>
+        <li><strong>Tablero de Visualización (Centro):</strong> Despliega en mosaico múltiples gráficas reactivas y sincrónicas, actualizadas por el motor de cálculo en tiempo real.</li>
+        <li><strong>Barra de Progreso (Inferior/Superior):</strong> Indica el tiempo de simulación transcurrido en días o unidades adimensionales frente al <code>Tmax</code>.</li>
+    </ul>
+
+    <h2>2. Configuración de Parámetros (Panel Lateral)</h2>
+    <p>El simulador es altamente paramétrico. Antes de ejecutar una simulación, usted puede configurar los siguientes módulos:</p>
+    
+    <h3>Geometría del Sistema y Discretización Numérica</h3>
+    <table>
+        <tr><th>Parámetro</th><th>Descripción</th></tr>
+        <tr><td><strong>L (Longitud)</strong></td><td>Longitud total del dominio del yacimiento (m o ft). Afecta directamente el tiempo de ruptura del frente.</td></tr>
+        <tr><td><strong>d (Grosor)</strong></td><td>Espesor vertical de cada capa geológica.</td></tr>
+        <tr><td><strong>Nx, Nz</strong></td><td>Número de nodos / celdas en que se discretiza el espacio finito. <em>Incrementar la malla mejora la precisión pero requiere más tiempo computacional.</em></td></tr>
+        <tr><td><strong>Tmax</strong></td><td>El tiempo máximo que el simulador calculará antes de detenerse (días o Volúmenes de Poro Inyectados - PVI).</td></tr>
+    </table>
+
+    <h3>Propiedades Petrofísicas y Capas Estratificadas</h3>
+    <p>El sistema modela <strong>dos capas acopladas</strong> (superior e inferior). Es posible inducir heterogeneidad variando los valores entre capas:</p>
+    <ul>
+        <li><strong>Porosidad (<code>phi1, phi2</code>):</strong> Fracción del volumen hueco aplicable para flujo de fluidos por capa.</li>
+        <li><strong>Permeabilidad absoluta (<code>k1, k2</code>):</strong> Facilidad del yacimiento para permitir la transmisión de fluidos. Inducir contraste de permeabilidades activará el <em>Crossflow</em>.</li>
+        <li><strong>Velocidad de Inyección (<code>u1, u2</code>):</strong> Tasa de inyección a la entrada del dominio para cada horizonte estudiado.</li>
+    </ul>
+
+    <h3>Propiedades Dinámicas de Espuma / Modelo kr</h3>
+    <p>Estos parámetros rigen cómo se modela la interferencia e inmovilización del gas provocada por la morfología de la burbuja:</p>
+    <ul>
+        <li><strong>kr0 (Permeabilidad Relativa):</strong> Términos base de movilidad para las fases acuosa y gaseosa respectiva.</li>
+        <li><strong>Viscosidad:</strong> Parámetros de viscosidad dinámica de las distintas fases involucradas.</li>
+        <li><strong>f_g (Calidad de Inyección):</strong> Fracción volumétrica del flujo que corresponde a gas frente al surfactante acuoso inyectado.</li>
+    </ul>
+
+    <h2>3. Ejecución de la Simulación</h2>
+    <p>El entorno de simulación cuenta con delegación de hilos (Web Workers) para mantener la pestaña del navegador siempre interactiva:</p>
+    <ol>
+        <li>Valide todos los parámetros en el recuadro izquierdo. Note que si introduce valores que comprometen el esquema numérico, el sistema podría alertar inestabilidades.</li>
+        <li>Pulse <strong>[ Iniciar / Play ]</strong> para comenzar los cálculos transitorios paso a paso.</li>
+        <li>Use <strong>[ Pausa ]</strong> para detener temporalmente el cálculo e inspeccionar a fondo un ciclo (PVI) de inyección en particular.</li>
+        <li>Utilice <strong>[ Reiniciar ]</strong> si modificó parámetros petrofísicos y desea computar el modelo matemático nuevamente desde cero.</li>
+    </ol>
+
+    <h2>4. Visualización y Análisis de Resultados</h2>
+    <p>Las gráficas interactivas se dividen de la siguiente manera:</p>
+    
+    <h3>a. Mapas 2D Superficiales (Colormaps)</h3>
+    <ul>
+        <li><strong>Mapa 2D de Saturación:</strong> Observe cómo varía la saturación de fase acuosa y la distribución del gas entrampado a lo largo del plano X-Z. </li>
+        <li><strong>Mapa 2D de Textura de Espuma:</strong> Muestra la concentración (densidad de burbujas) espacial para interpretar la fuerza / resistencia al flujo provocada.</li>
+    </ul>
+
+    <h3>b. Gráficas 1D de Comportamiento</h3>
+    <ul>
+        <li><strong>Caída de Presión (Pressure Drop):</strong> Perfil de las presiones decrecientes a lo largo del bloque dimensional longitudinal. Permite cuantificar cuanta fuerza direccional extrae la inyección de la espuma.</li>
+        <li><strong>Crossflow / Flujo Transversal (Transferencia):</strong> Intercambio másico de fluidos verticalmente. Relevante al haber contraste de permeabilidad, visualiza cómo cruza fluido la zona de contacto de estratos.</li>
+        <li><strong>Avance del Frente (PVI/Sat):</strong> Grafica las eficiencias de barrido a lo largo del tiempo, evidenciando las zonas donde ya rompió la fase gaseosa primaria.</li>
+    </ul>
+
+    <h2>5. Exportación de Resultados </h2>
+    <p>Para fines de post-procesamiento o inclusión en reportes, la interfaz cuenta con funcionalidades de exportación:</p>
+    <ul>
+        <li><strong>Botón de Exportación (Export Data):</strong> Ubicado generalmente en el cabezote de la interfaz de simulación o junto a los controles. Este botón agrupa todos los arrays numéricos de la simulación activa.</li>
+        <li><strong>Formato JSON / CSV:</strong> Al exportar, descargará un archivo estructurado conteniendo las matrices espaciales de presión, saturación y perfiles transversales correspondientes al último Time-Step calculado.</li>
+        <li><strong>Uso recomendado:</strong> Se sugiere pausar (<strong>[ Pausa ]</strong>) la simulación en el momento de interés (e.g. al ocurrir la ruptura del gas en el extremo) y luego presionar el botón de exportación para asegurar ventanas de tiempo precisas para graficar en Python o MATLAB.</li>
+    </ul>
+
+    <div class="alert">
+        <strong>Punto Fuerte del Simulador:</strong> Al usar formulaciones de equilibrio local estacionario la respuesta reológica se aproxima a la generación robusta casi inmediata. Compare el frente piston-like (de avance rígido) frente al avance del fluido sin presencia del agente espumante.
+    </div>
+
+    <div class="warning">
+        <strong>⚠️ Solución de Problemas (Troubleshooting) e Inestabilidades:</strong> 
+        Si el frente se deforma de manera ruidosa en la simulación o hay errores no-disipativos, esto se debe por una <em>violación de la condición CFL (Courant-Friedrichs-Lewy)</em>. Para resolverlo: Modifique el campo <code>Nx</code> minimizándolo, o aumente la longitud total de onda sin alterar las velocidades significativamente si experimenta picos asintóticos de presión.
+    </div>
+
+    <hr style="margin-top: 3rem; border:0; border-top:1px solid #e2e8f0;">
+    <p style="text-align: center; color: #64748b; font-size: 0.9em;">Desarrollado para fines académicos e investigativos - 2026.</p>
+</body>
+</html>
+
+    <h2>3. Ejecución de la Simulación</h2>
+    <p>Una vez definidos los parámetros, pulse el botón de <strong>Iniciar Simulación</strong> en el panel de controles. Verá visualizaciones en tiempo real procesadas por Web Workers para garantizar fluidez sin bloquear la interfaz.</p>
+
+    <h2>4. Visualización de Resultados</h2>
+    <p>Explore los diferentes gráficos desplegados en el área principal:</p>
+    <ul>
+        <li><em>Mapas 2D:</em> Perfiles de saturación, presión y textura de la espuma.</li>
+        <li><em>Crossflow:</em> Transferencia de fluidos vertical entre las capas.</li>
+        <li><em>Perfiles 1D:</em> Gráficos de frente de avance, caídas de presión y viscosidad aparente.</li>
+    </ul>
+
+    <div class="alert">
+        <strong>Nota de Rendimiento:</strong> Mallas muy finas (<code>Nx &gt; 200</code>) pueden incrementar considerablemente el tiempo de cómputo transitorio.
+    </div>
+</body>
+</html>

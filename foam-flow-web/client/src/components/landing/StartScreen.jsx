@@ -66,7 +66,9 @@ export default function StartScreen({ onStart }) {
                 Launch Simulator
               </button>
               <a
-                href="#framework"
+                href="/manual_usuario.html"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="glass-panel text-[var(--color-on-surface)] px-10 py-5 rounded font-display text-lg font-bold uppercase tracking-widest hover:bg-[var(--color-surface-container-high)] transition-all"
               >
                 View Documentation
