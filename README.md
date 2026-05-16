@@ -1,4 +1,4 @@
-# Foam Flow Web 🌊
+# Foam Flow Web
 
 Un simulador bidimensional interactivo para procesos de inyección de espuma en medios porosos estratificados, desarrollado bajo la asunción de equilibrio local. Esta herramienta de investigación y análisis permite visualizar la dinámica de fluidos complejos, calcular balances de la población de burbujas, observar caídas de presión y analizar el fenómeno transversal (*crossflow*) en tiempo real.
 
